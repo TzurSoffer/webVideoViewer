@@ -5,10 +5,13 @@ import threading
 import sys
 
 class VideoStream:
-    def __init__(self, htmlTemplate="./index.html"):
+    def __init__(self, htmlTemplate="./index.html", port=5000):
         self.currentFolder = os.path.dirname(os.path.abspath(__file__))
         self.app = Flask(__name__, template_folder=self.currentFolder)
         self.frame=b""
+        
+        self.debug = debug
+        self.port = port
 
         @self.app.route('/')
         def index():
@@ -21,7 +24,7 @@ class VideoStream:
         self.run()
 
     def run(self):
-        threading.Thread(target=self.app.run).start()
+        threading.Thread(target=self.app.run, kwargs={"host": "0.0.0.0", "port": self.port}).start()
 
     def videoUpdater(self):
         while True:
