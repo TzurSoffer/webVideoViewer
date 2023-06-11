@@ -10,7 +10,6 @@ class VideoStream:
         self.app = Flask(__name__, template_folder=self.currentFolder)
         self.frame=b""
         
-        self.debug = debug
         self.port = port
 
         @self.app.route('/')
