@@ -34,6 +34,8 @@ import webViewer
 ```
 
 4. Build the `VideoStream` class and run the application.
+
+```
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
     videoStream = webViewer.VideoStream()
