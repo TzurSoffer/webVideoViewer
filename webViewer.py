@@ -5,25 +5,25 @@ import threading
 import sys
 
 class VideoStream:
-    def __init__(self):
+    def __init__(self, htmlTemplate="./index.html"):
         self.currentFolder = os.path.dirname(os.path.abspath(__file__))
         self.app = Flask(__name__, template_folder=self.currentFolder)
         self.frame=b""
 
         @self.app.route('/')
         def index():
-            return render_template('index.html')
+            return render_template(htmlTemplate)
 
-        @self.app.route('/video_feed')
-        def video_feed():
-            return Response(self.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+        @self.app.route('/videoFeed')
+        def videoFeed():
+            return Response(self.videoUpdater(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
         self.run()
 
     def run(self):
         threading.Thread(target=self.app.run).start()
 
-    def generate_frames(self):
+    def videoUpdater(self):
         while True:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + self.frame + b'\r\n')
