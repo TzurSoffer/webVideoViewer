@@ -18,7 +18,11 @@ The application is built using Python, OpenCV, and Flask. It consists of a `Vide
 
 6. The `run` method starts the Flask application in a separate thread so that it can run concurrently with the main program.
 
-## Usage
+7. The `pause` method pauses the Flask application, this can be reverted using the unpause method.
+
+8. The `unpause` method unpauses the Flask application if its paused, otherwise is does nothing.
+
+## Simple usage
 
 To use the Video Stream Flask application, follow these steps:
 
@@ -36,12 +40,28 @@ import webViewer
 4. Build the `VideoStream` class and run the application.
 
 ```
-if __name__ == '__main__':
-    cap = cv2.VideoCapture(0)
-    videoStream = webViewer.VideoStream()
+def checkKeyboardInput(videoStream):
     while True:
-        _, frame = cap.read()
-        videoStream.imshow(frame)
+        input("press enter to stop ")
+        videoStream.pause()
+        input("press enter to start ")
+        videoStream.unpause()
+
+if __name__ == '__main__':
+    cap = cv2.VideoCapture(-1)
+    videoStream = VideoStream()
+
+    # Start the keyboard input checking thread
+    keyboard_thread = threading.Thread(target=checkKeyboardInput, args=(videoStream,))
+    keyboard_thread.start()
+
+    try:
+        while True:
+            _, frame = cap.read()
+            videoStream.imshow(frame)
+    except Exception as e:
+        print(e)
+        sys.exit()
 ```
 
 5. Save the script and run it using the command:
@@ -49,7 +69,7 @@ if __name__ == '__main__':
 python your_script_name.py
 ```
 
-6. Open your web browser and go to `http://localhost:5000` to view the video stream from your webcam.
+6. Open your web browser and go to `http://localhost:5000` or `http://serverIP:5000` to view the video stream from your webcam.
 
 ## Customization
 
