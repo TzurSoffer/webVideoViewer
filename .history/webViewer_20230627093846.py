@@ -16,16 +16,13 @@ class VideoStream:
 
         @self.app.route('/videoFeed')
         def videoFeed():
-            return Response(self.videoUpdater(""), mimetype='multipart/x-mixed-replace; boundary=frame')
+            return Response(self.videoUpdater(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
         self.port = port
-        self.videos = {}
+        self.frame = b""
         self.running = True
         self.paused = False
-    
-    def _createTemplate(self, subpage):
-        with open(self.templatePath)
-    
+
     def run(self):
         threading.Thread(target=self.app.run, kwargs={"host": "0.0.0.0", "port": self.port}).start()
 
@@ -35,16 +32,16 @@ class VideoStream:
     def unpause(self):
         self.paused = False
 
-    def videoUpdater(self, subpage):
+    def videoUpdater(self):
         while self.running:
             while not self.paused and self.running:
                 yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + self.videos[subpage] + b'\r\n')
+                       b'Content-Type: image/jpeg\r\n\r\n' + self.frame + b'\r\n')
 
-    def imshow(self, name, frame):
-        _, buffer = cv2.imencode('.jpg', frame)
+    def imshow(self, frame):
+        ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
-        self.videos[name] = frame
+        self.frame = frame
 
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Image Viewer</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 20px;
+      }
+    </style>
+    <script>
+      window.onload = function () {
+        function updateImage() {
+          var img = document.getElementById("video-feed");
+          img.src = img.dataset.src;
+        }
+        
+        setInterval(updateImage, 1000); // Update every second
+      };
+    </script>
+  </head>
+  <body>
+    <img id="video-feed" src="{{ videoFeedUrl }}" data-src="{{ videoFeedUrl }}" alt="Video Feed" />
+  </body>
+</html>

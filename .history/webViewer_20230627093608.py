@@ -9,42 +9,28 @@ class VideoStream:
         self.currentFolder = os.path.dirname(os.path.abspath(__file__))
         self.app = Flask(__name__, template_folder=self.currentFolder)
 
-
         @self.app.route('/')
         def index():
             return render_template('index.html')
 
-        @self.app.route('/videoFeed')
-        def videoFeed():
-            return Response(self.videoUpdater(""), mimetype='multipart/x-mixed-replace; boundary=frame')
-
         self.port = port
-        self.videos = {}
-        self.running = True
-        self.paused = False
-    
-    def _createTemplate(self, subpage):
-        with open(self.templatePath)
-    
+        self.subpages = {}
+        self.run()
+
     def run(self):
         threading.Thread(target=self.app.run, kwargs={"host": "0.0.0.0", "port": self.port}).start()
 
-    def pause(self):
-        self.paused = True
+    def add_subpage(self, subpage_name, html_template):
+        self.subpages[subpage_name] = html_template
 
-    def unpause(self):
-        self.paused = False
+        @self.app.route('/' + subpage_name)
+        def subpage():
+            return render_template(self.subpages[subpage_name])
 
-    def videoUpdater(self, subpage):
-        while self.running:
-            while not self.paused and self.running:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + self.videos[subpage] + b'\r\n')
-
-    def imshow(self, name, frame):
-        _, buffer = cv2.imencode('.jpg', frame)
+    def imshow(self, subpage_name, frame):
+        ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
-        self.videos[name] = frame
+        self.subpages[subpage_name] = frame
 
 if __name__ == '__main__':
     cap = cv2.VideoCapture(0)
