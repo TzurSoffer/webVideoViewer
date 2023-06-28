@@ -1,4 +1,4 @@
-# QA README for Flask Subpage App
+# README for Web Viewer
 
 ## Introduction
 The Flask Subpage App is a Python application that allows you to create subpages with live video streams from a webcam. It uses the Flask framework to handle web requests and displays video frames in real-time.
