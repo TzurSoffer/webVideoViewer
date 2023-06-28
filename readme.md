@@ -25,9 +25,9 @@ The Flask Subpage App is a Python application that allows you to create subpages
    import base64
    ```
 
-2. Create an instance of the `SubpageApp` class:
+2. Create an instance of the `VideoStream` class:
    ```python
-   app = SubpageApp()
+   app = VideoStream()
    ```
 
 3. Start the Flask web server on a specified port (default is 80):
@@ -53,14 +53,14 @@ The Flask Subpage App is a Python application that allows you to create subpages
 ## Customization
 You can customize the following aspects of the Flask Subpage App:
 
-- **Templates**: The app uses HTML templates to render the home page and subpages. By default, it looks for the templates in the `templates` folder relative to the script's location. You can specify custom template paths when creating a `SubpageApp` instance:
+- **Templates**: The app uses HTML templates to render the home page and subpages. By default, it looks for the templates in the `templates` folder relative to the script's location. You can specify custom template paths when creating a `VideoStream` instance:
    ```python
-   app = SubpageApp(homePageTemplate="path/to/home.html", subpageTemplate="path/to/subpage.html")
+   app = VideoStream(homePageTemplate="path/to/home.html", subpageTemplate="path/to/subpage.html")
    ```
 
-- **Port**: The default port for the Flask web server is 80. If you want to use a different port, specify it when creating a `SubpageApp` instance:
+- **Port**: The default port for the Flask web server is 80. If you want to use a different port, specify it when creating a `VideoStream` instance:
    ```python
-   app = SubpageApp(port=5000)
+   app = VideoStream(port=5000)
    ```
 
 

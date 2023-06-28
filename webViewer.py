@@ -69,7 +69,7 @@ class VideoStream:
 
 
 if __name__ == '__main__':
-    app = WebViewer()
+    app = VideoStream()
     cap = cv2.VideoCapture(0)
     
     app.run()
