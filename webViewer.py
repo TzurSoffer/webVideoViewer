@@ -14,7 +14,7 @@ class SubpageManager:
     def getFrame(self, name):
         return self.frames.get(name, None)
 
-class SubpageApp:
+class WebViewer:
     def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=80):
         self.currentFolder = os.path.dirname(os.path.abspath(__file__))
         self.app = Flask(__name__, template_folder=self.currentFolder)
@@ -69,7 +69,7 @@ class SubpageApp:
 
 
 if __name__ == '__main__':
-    app = SubpageApp()
+    app = WebViewer()
     cap = cv2.VideoCapture(0)
     
     app.run()
