@@ -14,7 +14,7 @@ class SubpageManager:
     def getFrame(self, name):
         return self.frames.get(name, None)
 
-class WebViewer:
+class VideoStream:
     def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=80):
         self.currentFolder = os.path.dirname(os.path.abspath(__file__))
         self.app = Flask(__name__, template_folder=self.currentFolder)
