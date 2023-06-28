@@ -16,8 +16,8 @@ class SubpageManager:
         return self.frames.get(name, None)
 
 class SubpageApp:
-    def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=5000):
-        self.currentFolder = os.path.dirname(os.path.abspath(__file__))
+    def __init__(self, homePageTemplate="home.html", subpageTemplate="subpage.html", port=5000):
+        self.currentFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
         self.app = Flask(__name__, template_folder=self.currentFolder)
         self.manager = SubpageManager()
         self.setupRoutes()
