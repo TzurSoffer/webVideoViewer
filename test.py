@@ -25,12 +25,12 @@ class SubpageApp:
         self.subpageTemplate = subpageTemplate
         self.subpages = []
         self.homePage = "<h1>Subpages for Names</h1><ul>{}</ul>"
-    
+
     def setupRoutes(self):
         self.app.route('/')(self.index)
         self.app.route('/<name>')(self.subpage)
         self.app.route('/imshow/<name>')(self.imshow)
-    
+
     def addSubpage(self, name):
         self.subpages.append(name)
     
