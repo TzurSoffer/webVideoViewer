@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, render_template
 import threading
 import cv2
 import os
@@ -15,9 +15,8 @@ class SubpageManager:
         return self.frames.get(name, None)
 
 class VideoStream:
-    def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=80):
-        self.currentFolder = os.path.dirname(os.path.abspath(__file__))
-        self.app = Flask(__name__, template_folder=self.currentFolder)
+    def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=80, currentFolder = os.path.dirname(os.path.abspath(__file__))):
+        self.app = Flask(__name__, template_folder=currentFolder)
 
         self.manager = SubpageManager()
 
@@ -31,15 +30,17 @@ class VideoStream:
 
     def setupRoutes(self):
         self.app.route('/')(self.index)
-        self.app.route('/<name>')(self.subpage)
-        self.app.route('/imshow/<name>')(self.imshow)
+        self.app.route('/<name>')(self.renderTemplate)
+        self.app.route('/<name>/videoFeed')(self.subpage)
 
     def addSubpage(self, name):
         self.subpages.append(name)
     
     def index(self):
-        subpages = ''.join(f'<li><a href="/{name}">{name}</a></li>' for name in self.subpages)
-        return self.homePage.format(subpages)
+        return(render_template(self.homePageTemplate, subpages=self.subpages))
+
+    def renderTemplate(self, name):
+        return(render_template(self.subpageTemplate, video_feed=f"/{name}/videoFeed"))
     
     def subpage(self, name):
         def generate_frames():
