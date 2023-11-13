@@ -18,16 +18,12 @@ The WebVideoViewer is a Python application that allows you to create subpages wi
 ## Usage
 1. Import the necessary modules:
    ```python
-   from flask import Flask, Response
-   import threading
-   import cv2
-   import os
-   import base64
+   import webViewer
    ```
 
 2. Create an instance of the `VideoStream` class:
    ```python
-   app = VideoStream()
+   app = webViewer.VideoStream()
    ```
 
 3. Start the Flask web server on a specified port (default is 80):
@@ -48,7 +44,7 @@ The WebVideoViewer is a Python application that allows you to create subpages wi
 
 5. Access the subpages:
    - The home page lists all the available subpages. Visit the root URL (e.g., `http://localhost:80/`) to see the home page.
-   - Each subpage displays a live video stream. Append the subpage name to the root URL (e.g., `http://localhost:80/<name>`) to access a specific subpage.
+   - Each subpage displays a live video stream. Add the subpage name to the root URL (e.g., `http://localhost:80/video1`) to access a specific subpage.
 
 ## Customization
 You can customize the following aspects of the Flask Subpage App:
