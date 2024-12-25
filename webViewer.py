@@ -1,8 +1,15 @@
 from flask import Flask, Response, render_template
 import threading
-import cv2
+import simplejpeg
+import numpy as np
 import os
 import base64
+
+def toJPEG(image, quality=100, colorspace="BGR"):
+    if len(image.shape) == 2:
+        colorspace = "GRAY"
+        image = np.expand_dims(image, axis=2)
+    return(simplejpeg.encode_jpeg(image, quality=quality, colorspace=colorspace))
 
 class SubpageManager(dict):
     def __getitem__(self, __key):
@@ -75,7 +82,7 @@ class VideoStream():
 
     def imshow(self, name, img) -> None:
         """ Displays an image "img" on the subpage "name" """
-        _, buffer = cv2.imencode('.jpg', img)          #< Encode the img as a JPEG image
+        buffer = toJPEG(img)                        #< Encode the img as a JPEG image
         img = base64.b64encode(buffer).decode('utf-8') #< Encode the image data as base64 string
         self._setImg(name, img)                        #< Store the img in the SubpageManager
 
@@ -85,6 +92,9 @@ class VideoStream():
 
 
 if __name__ == '__main__':
+    import cv2
+    import time
+
     cap = cv2.VideoCapture(0)  #< Open the webcam capture device
     app = VideoStream()        #< Create a VideoStream object
     app.run()                  #< Run the Flask application
@@ -92,6 +102,7 @@ if __name__ == '__main__':
     # Continuously capture imgs from the webcam and update subpages
     while True:
         _, frame = cap.read()                          #< Read a frame from the webcam
+        time.sleep(1)
         app.imshow("frame", frame)                     #< Display the frame on the "frame" subpage
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) #< Convert the frame to grayscale
