@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template
+from flask import Flask, Response, render_template, request
 import threading
 import simplejpeg
 import numpy as np
@@ -6,6 +6,10 @@ import os
 import base64
 
 def toJPEG(image, quality=100, colorspace="BGR"):
+    if isinstance(image, list):
+        image = np.array(image)
+    image = image.astype(np.uint8)
+
     if len(image.shape) == 2:
         colorspace = "GRAY"
         image = np.expand_dims(image, axis=2)
@@ -18,7 +22,7 @@ class SubpageManager(dict):
 class VideoStream():
     """
     """
-    def __init__(self, homePageTemplate="templates/home.html", subpageTemplate="templates/subpage.html", port=80, currentFolder=os.path.dirname(os.path.abspath(__file__))):
+    def __init__(self, homePageTemplate=None, subpageTemplate=None, templateFolder=None, port=80):
         """
         Initializes a VideoStream object.
 
@@ -26,19 +30,30 @@ class VideoStream():
             homePageTemplate (str): Path to the home page template file.
             subpageTemplate (str): Path to the subpage template file.
             port (int): Port number for the Flask application.
-            currentFolder (str): Path to the current folder containing the script.
         """
-        self.app = Flask(__name__, template_folder=currentFolder)
+
+        if templateFolder == None:
+            templateFolder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+            print(f"Using default template folder: {templateFolder}")
+
+        self.app = Flask(__name__, template_folder=templateFolder)
         self.manager = SubpageManager()
         self.port = port
 
-        self.setupRoutes()
+        if homePageTemplate is None:
+            homePageTemplate = "home.html"
+        if subpageTemplate is None:
+            subpageTemplate = "subpage.html"
+
         self.homePageTemplate = homePageTemplate
         self.subpageTemplate = subpageTemplate
+
+        self.setupRoutes()
 
     def setupRoutes(self) -> None:
         """Sets up the routes for the Flask application"""
         self.app.route('/')(self.index)  #< Define the route for the home page
+        self.app.route('/shutdown', methods=['POST'])(self._shutdownFlask)
         self.app.route('/<name>')(self.renderTemplate)  #< Define the route for the subpages
         self.app.route('/<name>/videoFeed')(self.subpage)  #< Define the route for the video feed of each subpage
 
@@ -89,6 +104,17 @@ class VideoStream():
     def run(self) -> None:
         """Runs the Flask application in a separate thread"""
         threading.Thread(target=self.app.run, kwargs={"host": "0.0.0.0", "port": self.port}).start()  #< Run the Flask application in a separate thread
+
+    def _shutdownFlask(self):
+        func = request.environ.get('werkzeug.server.shutdown')
+        if func is None:
+            raise RuntimeError('Not running with the Werkzeug Server')
+        func()
+
+    def stop(self) -> None:
+        """Stops the Flask application"""
+        with self.app.test_client() as client:
+            client.post('/shutdown')     #< simulate a post request to trigger the shutdown signal
 
 
 if __name__ == '__main__':

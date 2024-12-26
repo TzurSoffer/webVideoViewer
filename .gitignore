@@ -1,3 +1,7 @@
 pycache/
 .history/
 test/
+build/
+dist/
+wrc/webStreamViewer.egg-info/
+webStreamViewer.egg-info/
