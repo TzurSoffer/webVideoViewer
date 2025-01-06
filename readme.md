@@ -24,6 +24,7 @@ The WebVideoViewer is a Python application that allows you to create subpages wi
 1. Import the necessary modules:
    ```python
    import webStreamViewer
+   import cv2
    ```
 
 2. Create an instance of the `VideoStream` class:
