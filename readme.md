@@ -3,6 +3,8 @@
 ## Introduction
 The WebVideoViewer is a Python application that allows you to create subpages with live video streams from a webcam or other source. It uses the Flask framework to handle web requests and displays video frames in real-time.
 
+### If you found [this repository](https://github.com/TzurSoffer/webVideoViewer) useful, please give it a ⭐!.
+
 ## Requirements
 - Python 3.x
 - Numpy
